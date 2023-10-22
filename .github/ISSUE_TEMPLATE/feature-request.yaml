@@ -19,6 +19,8 @@ body:
       label: Feature Description
       description: Describe the feature you're interested in seeing
       placeholder: Support for Content Templates
+    validations:
+      required: true
   - type: markdown
     attributes:
       value: "### Thanks again! I'll take a look at it."
