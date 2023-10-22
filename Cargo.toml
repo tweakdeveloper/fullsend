@@ -1,0 +1,14 @@
+[package]
+name = "fullsend"
+version = "0.1.0"
+authors = ["Nicola Clark <nicola@slottedspoon.dev>"]
+edition = "2021"
+description = "A Rust library to interact with the Twilio API"
+readme = "README.md"
+repository = "https://github.com/tweakdeveloper/fullsend"
+license = "MIT"
+keywords = ["twilio", "sms", "messaging"]
+categories = ["api-bindings"]
+
+[dependencies]
+thiserror = "1.0"
