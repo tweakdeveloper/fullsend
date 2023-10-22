@@ -1,0 +1,24 @@
+name: Feature Request
+description: Request a feature
+body:
+  - type: markdown
+    attributes:
+      value: "## Thanks for you interest in fullsend"
+  - type: dropdown
+    attributes:
+      label: Twilio support?
+      description: Does Twilio support the feature you're requesting?
+      multiple: false
+      options:
+        - "Yes"
+        - "No"
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Describe the feature you're interested in seeing
+      placeholder: Support for Content Templates
+  - type: markdown
+    attributes:
+      value: "### Thanks again! I'll take a look at it."
+labels:
+  - enhancement
