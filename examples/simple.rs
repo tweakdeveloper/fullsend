@@ -5,8 +5,10 @@ use fullsend::{Client, Message};
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // set up the client
-    let account_sid = env::var("TWILIO_ACCOUNT_SID")?;
-    let account_tkn = env::var("TWILIO_ACCOUNT_TKN")?;
+    let account_sid = env::var("TWILIO_ACCOUNT_SID")
+        .map_err(|e| format!("twilio account SID env var error: {}", e))?;
+    let account_tkn = env::var("TWILIO_ACCOUNT_TKN")
+        .map_err(|e| format!("twilio account auth token env var error: {}", e))?;
     let client = Client::builder()
         .account_sid(account_sid)
         .auth_token(account_tkn)
