@@ -5,7 +5,7 @@
 //! ```rust
 //! # let account_sid: String = "".into();
 //! # let auth_token: String = "".into();
-//! # let message_destination: String = "".into();
+//! # let message_destination = "";
 //! use fullsend::{Client, Message};
 //!
 //! let client = Client::builder()

@@ -9,19 +9,19 @@
 /// ```rust
 /// use fullsend::Message;
 ///
-/// # let phone_num: String = "".into();
+/// # let phone_num = "";
 /// let message = Message::builder()
 ///     .to(phone_num)
 ///     .build();
 /// ```
 #[derive(Debug, PartialEq)]
-pub struct Message {
-    to: String,
+pub struct Message<'a> {
+    to: &'a str,
 }
 
-impl Message {
+impl<'a> Message<'a> {
     /// This function returns a `MessageBuilder` to use to create a `Message`.
-    pub fn builder() -> MessageBuilder {
+    pub fn builder() -> MessageBuilder<'a> {
         MessageBuilder::default()
     }
 }
@@ -39,11 +39,11 @@ pub enum MessageBuilderError {
 
 /// The `MessageBuilder` struct is used to create a `Message`.
 #[derive(Default)]
-pub struct MessageBuilder {
-    to: Option<String>,
+pub struct MessageBuilder<'a> {
+    to: Option<&'a str>,
 }
 
-impl MessageBuilder {
+impl<'a> MessageBuilder<'a> {
     /// This function creates a `MessageBuilder`.
     pub fn new() -> Self {
         Self { to: None }
@@ -51,17 +51,17 @@ impl MessageBuilder {
 
     /// This function validates the builder chain and returns a `Message` that
     /// you can then use to interact with Twilio messages.
-    pub fn build(&self) -> Result<Message, MessageBuilderError> {
+    pub fn build(self) -> Result<Message<'a>, MessageBuilderError> {
         if self.to.is_none() {
             return Err(MessageBuilderError::NoToSet);
         }
-        let to = self.to.clone().unwrap();
+        let to = self.to.unwrap();
         Ok(Message { to })
     }
 
     /// This function sets the destination (i.e. recipient's phone number) of
     /// the message.
-    pub fn to(&mut self, to: String) -> &mut Self {
+    pub fn to(mut self, to: &'a str) -> Self {
         self.to = Some(to);
         self
     }
@@ -78,8 +78,8 @@ mod tests {
     }
 
     #[test]
-    fn valid_builder_returns_client() {
-        let client = Message::builder().to("".into()).build();
-        assert!(client.is_ok());
+    fn valid_builder_returns_message() {
+        let message = Message::builder().to("").build();
+        assert!(message.is_ok());
     }
 }
