@@ -196,11 +196,15 @@ impl ClientBuilder {
         self
     }
 
+    /// This function sets the API key to be used to authenticate the `Client`
+    /// with Twilio.
     pub fn api_key(&mut self, key: String, secret: String) -> &mut Self {
         self.auth = Some(AuthMethod::APIKey(key, secret));
         self
     }
 
+    /// This function sets the account auth token to be used to authenticate the
+    /// `Client` with Twilio.
     pub fn auth_token(&mut self, token: String) -> &mut Self {
         self.auth = Some(AuthMethod::AccountAuthToken(token));
         self
