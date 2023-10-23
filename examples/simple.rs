@@ -14,10 +14,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .auth_token(account_tkn)
         .build()?;
     // get the destination phone number
-    print!("phone number> ");
-    std::io::stdout().flush()?;
-    let mut phone_num = String::new();
-    std::io::stdin().read_line(&mut phone_num)?;
+    let phone_num = prompt("phone number")?;
     // get the sender phone number
     let sender_num = env::var("TWILIO_SENDER_NUM")?;
     // set up the message
@@ -29,4 +26,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // send the message
     client.send_message(&message).await?;
     Ok(())
+}
+
+fn prompt(prompt: &str) -> Result<String, std::io::Error> {
+    print!("{}> ", prompt);
+    std::io::stdout().flush()?;
+    let mut buf = String::new();
+    std::io::stdin().read_line(&mut buf)?;
+    Ok(buf)
 }
