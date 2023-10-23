@@ -54,8 +54,13 @@ impl Client {
 /// can arise when attempting to build a `ClientBuilder`.
 #[derive(Debug, thiserror::Error, PartialEq)]
 pub enum ClientBuilderError {
+    /// This error occurs when you attempt to build a `ClientBuilder` without
+    /// setting an account SID.
     #[error("no account SID set in builder")]
     NoAccountSidSet,
+    /// This error occurs when you attempt to build a `ClientBuilder` without
+    /// setting an authentication method, either the account's auth token or an
+    /// API key and secret.
     #[error("no auth method set in builder")]
     NoAuthMethodSet,
 }

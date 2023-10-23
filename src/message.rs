@@ -30,6 +30,9 @@ impl Message {
 /// can arise when attempting to build a `MessageBuilder`.
 #[derive(Debug, thiserror::Error, PartialEq)]
 pub enum MessageBuilderError {
+    /// This error occurs when you attempt to build a `MessageBuilder` without
+    /// setting the `to` field by calling the `to` function during the builder
+    /// chain.
     #[error("no `to` field set in builder")]
     NoToSet,
 }
