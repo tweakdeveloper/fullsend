@@ -2,7 +2,7 @@
 //!
 //! # Getting started
 //!
-//! ```rust
+//! ```no_run
 //! # let account_sid: String = "".into();
 //! # let auth_token: String = "".into();
 //! # let message = "";
