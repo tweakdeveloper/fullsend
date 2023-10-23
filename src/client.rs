@@ -63,6 +63,13 @@ impl Client {
         ClientBuilder::default()
     }
 
+    /// This function sends a `Message`.
+    ///
+    /// # Return value
+    ///
+    /// If the return is `Ok`, this does not necessarily mean that the message
+    /// was delivered to the destination. This only means that the communication
+    /// with Twilio was successful, and the request was valid.
     pub async fn send_message(&self, message: &Message<'_>) -> Result<(), SendError> {
         // in order to avoid having our params map reallocate every time we push
         // one, we're going to count the number we need, then allocate once.
