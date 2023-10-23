@@ -15,5 +15,6 @@ let client = Client::builder()
     .build();
 let message = Message::builder()
     .to(message_destination)
+    .from(twilio_number)
     .build();
 ```

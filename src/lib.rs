@@ -6,6 +6,7 @@
 //! # let account_sid: String = "".into();
 //! # let auth_token: String = "".into();
 //! # let message_destination = "";
+//! # let twilio_number = "";
 //! use fullsend::{Client, Message};
 //!
 //! let client = Client::builder()
@@ -14,6 +15,7 @@
 //!     .build();
 //! let message = Message::builder()
 //!     .to(message_destination)
+//!     .from(twilio_number)
 //!     .build();
 //! ```
 

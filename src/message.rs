@@ -10,12 +10,16 @@
 /// use fullsend::Message;
 ///
 /// # let phone_num = "";
+/// # let sender_num = "";
 /// let message = Message::builder()
 ///     .to(phone_num)
+///     .from(sender_num)
 ///     .build();
 /// ```
 #[derive(Debug, PartialEq)]
 pub struct Message<'a> {
+    from: Option<&'a str>,
+    messaging_service_sid: Option<&'a str>,
     to: &'a str,
 }
 
@@ -31,6 +35,11 @@ impl<'a> Message<'a> {
 #[derive(Debug, thiserror::Error, PartialEq)]
 pub enum MessageBuilderError {
     /// This error occurs when you attempt to build a `MessageBuilder` without
+    /// setting a sender, either a "from" with the `from` function or a Twilio
+    /// Messaging Service SID with the `messaging_service_sid` function.
+    #[error("no sender set in the builder")]
+    NoSenderSet,
+    /// This error occurs when you attempt to build a `MessageBuilder` without
     /// setting the `to` field by calling the `to` function during the builder
     /// chain.
     #[error("no `to` field set in builder")]
@@ -40,23 +49,47 @@ pub enum MessageBuilderError {
 /// The `MessageBuilder` struct is used to create a `Message`.
 #[derive(Default)]
 pub struct MessageBuilder<'a> {
+    from: Option<&'a str>,
+    messaging_service_sid: Option<&'a str>,
     to: Option<&'a str>,
 }
 
 impl<'a> MessageBuilder<'a> {
     /// This function creates a `MessageBuilder`.
     pub fn new() -> Self {
-        Self { to: None }
+        Self {
+            from: None,
+            messaging_service_sid: None,
+            to: None,
+        }
     }
 
     /// This function validates the builder chain and returns a `Message` that
     /// you can then use to interact with Twilio messages.
     pub fn build(self) -> Result<Message<'a>, MessageBuilderError> {
-        if self.to.is_none() {
-            return Err(MessageBuilderError::NoToSet);
+        // validate that a destination is set and unwrap it if it is
+        let to = match self.to {
+            Some(to) => to,
+            None => return Err(MessageBuilderError::NoToSet),
+        };
+        // validate that we have a sender: either a from or messaging service,
+        // or both
+        if self.from.is_none() && self.messaging_service_sid.is_none() {
+            return Err(MessageBuilderError::NoSenderSet);
         }
-        let to = self.to.unwrap();
-        Ok(Message { to })
+        // all necessary fields are set, let's return the message
+        Ok(Message {
+            from: self.from,
+            messaging_service_sid: self.messaging_service_sid,
+            to,
+        })
+    }
+
+    /// This function sets the sender (in this case, the Twilio phone number
+    /// you're using to send the message) of the message.
+    pub fn from(mut self, from: &'a str) -> Self {
+        self.from = Some(from);
+        self
     }
 
     /// This function sets the destination (i.e. recipient's phone number) of
@@ -72,6 +105,12 @@ mod tests {
     use super::*;
 
     #[test]
+    fn builder_requires_sender() {
+        let builder_result = Message::builder().to("").build();
+        assert_eq!(Err(MessageBuilderError::NoSenderSet), builder_result);
+    }
+
+    #[test]
     fn builder_requires_to() {
         let builder_result = Message::builder().build();
         assert_eq!(Err(MessageBuilderError::NoToSet), builder_result);
@@ -79,7 +118,7 @@ mod tests {
 
     #[test]
     fn valid_builder_returns_message() {
-        let message = Message::builder().to("").build();
+        let message = Message::builder().to("").from("").build();
         assert!(message.is_ok());
     }
 }
