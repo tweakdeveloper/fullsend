@@ -47,6 +47,10 @@ pub struct Client {
 /// when attempting to send a `Message`.
 #[derive(Debug, thiserror::Error)]
 pub enum SendError {
+    /// This error occurs when there was an error serializing the content
+    /// variables. The `serde_json` error is contained in this error.
+    #[error("couldn't serialize content variables")]
+    Json(#[from] serde_json::Error),
     /// This error occurs when there was an error communicating with Twilio.
     /// The `reqwest` error is contained in this error.
     #[error("couldn't communicate with twilio")]
@@ -91,6 +95,9 @@ impl Client {
         if message.content_sid.is_some() {
             num_params += 1;
         }
+        if message.content_variables.is_some() {
+            num_params += 1;
+        }
         if message.media_urls.is_some() {
             // like i said
             num_params += message.media_urls.as_ref().unwrap().len();
@@ -109,6 +116,14 @@ impl Client {
         }
         if let Some(content_sid) = message.content_sid {
             params.push(("ContentSid", content_sid));
+        }
+        let content_variables_json: String;
+        if let Some(content_variables) = &message.content_variables {
+            content_variables_json = match serde_json::to_string(&content_variables) {
+                Ok(content_variables_json) => content_variables_json,
+                Err(error) => return Err(SendError::Json(error)),
+            };
+            params.push(("ContentVariables", &content_variables_json));
         }
         if let Some(media_urls) = &message.media_urls {
             for media_url in media_urls {

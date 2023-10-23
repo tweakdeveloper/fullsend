@@ -1,5 +1,7 @@
 //! This module provides an interface for interacting with Twilio messages.
 
+use std::collections::HashMap;
+
 /// The `Message` struct is the interface for interacting with Twilio messages.
 ///
 /// # Creating
@@ -22,6 +24,7 @@
 pub struct Message<'a> {
     pub(crate) body: Option<&'a str>,
     pub(crate) content_sid: Option<&'a str>,
+    pub(crate) content_variables: Option<HashMap<&'a str, &'a str>>,
     pub(crate) from: Option<&'a str>,
     pub(crate) media_urls: Option<Vec<&'a str>>,
     pub(crate) messaging_service_sid: Option<&'a str>,
@@ -62,6 +65,7 @@ pub enum MessageBuilderError {
 pub struct MessageBuilder<'a> {
     body: Option<&'a str>,
     content_sid: Option<&'a str>,
+    content_variables: Option<HashMap<&'a str, &'a str>>,
     from: Option<&'a str>,
     media_urls: Option<Vec<&'a str>>,
     messaging_service_sid: Option<&'a str>,
@@ -74,6 +78,7 @@ impl<'a> MessageBuilder<'a> {
         Self {
             body: None,
             content_sid: None,
+            content_variables: None,
             from: None,
             media_urls: None,
             messaging_service_sid: None,
@@ -102,6 +107,7 @@ impl<'a> MessageBuilder<'a> {
         Ok(Message {
             body: self.body,
             content_sid: self.content_sid,
+            content_variables: self.content_variables,
             from: self.from,
             media_urls: self.media_urls,
             messaging_service_sid: self.messaging_service_sid,
@@ -118,6 +124,12 @@ impl<'a> MessageBuilder<'a> {
     /// This function sets the Twilio Content SID of the message
     pub fn content_sid(mut self, content_sid: &'a str) -> Self {
         self.content_sid = Some(content_sid);
+        self
+    }
+
+    /// This function sets the Content Variables of the message.
+    pub fn content_variables(mut self, content_variables: HashMap<&'a str, &'a str>) -> Self {
+        self.content_variables = Some(content_variables);
         self
     }
 
