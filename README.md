@@ -18,4 +18,5 @@ let message = Message::builder()
     .from(twilio_number)
     .body(message)
     .build();
+client.send_message(&message).await;
 ```

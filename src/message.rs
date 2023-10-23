@@ -20,12 +20,12 @@
 /// ```
 #[derive(Debug, PartialEq)]
 pub struct Message<'a> {
-    body: Option<&'a str>,
-    content_sid: Option<&'a str>,
-    from: Option<&'a str>,
-    media_urls: Option<Vec<&'a str>>,
-    messaging_service_sid: Option<&'a str>,
-    to: &'a str,
+    pub(crate) body: Option<&'a str>,
+    pub(crate) content_sid: Option<&'a str>,
+    pub(crate) from: Option<&'a str>,
+    pub(crate) media_urls: Option<Vec<&'a str>>,
+    pub(crate) messaging_service_sid: Option<&'a str>,
+    pub(crate) to: &'a str,
 }
 
 impl<'a> Message<'a> {

@@ -10,15 +10,20 @@
 //! # let twilio_number = "";
 //! use fullsend::{Client, Message};
 //!
+//! # tokio_test::block_on(async {
 //! let client = Client::builder()
 //!     .account_sid(account_sid)
 //!     .auth_token(auth_token)
-//!     .build();
+//!     .build()
+//!     .unwrap();
 //! let message = Message::builder()
 //!     .to(message_destination)
 //!     .from(twilio_number)
 //!     .body(message)
-//!     .build();
+//!     .build()
+//!     .unwrap();
+//! client.send_message(&message).await;
+//! # })
 //! ```
 
 mod auth;
