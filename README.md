@@ -20,3 +20,9 @@ let message = Message::builder()
     .build();
 client.send_message(&message).await;
 ```
+
+Examples are also available in the `examples/` directory:
+
+```sh
+cargo run --example simple
+```
