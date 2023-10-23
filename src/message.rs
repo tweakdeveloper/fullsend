@@ -92,6 +92,13 @@ impl<'a> MessageBuilder<'a> {
         self
     }
 
+    /// This function sets the sender (in this case, the Twilio Messaging 
+    /// Service you're using to send the message) of the message.
+    pub fn messaging_service_sid(mut self, messaging_service_sid: &'a str) -> Self {
+        self.messaging_service_sid = Some(messaging_service_sid);
+        self
+    }
+
     /// This function sets the destination (i.e. recipient's phone number) of
     /// the message.
     pub fn to(mut self, to: &'a str) -> Self {
