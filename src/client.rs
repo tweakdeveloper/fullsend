@@ -136,11 +136,11 @@ impl Client {
         match &self.auth {
             AuthMethod::AccountAuthToken(token) => {
                 auth_user = &self.account_sid;
-                auth_pass = &token;
+                auth_pass = token;
             }
             AuthMethod::APIKey(key, secret) => {
-                auth_user = &key;
-                auth_pass = &secret;
+                auth_user = key;
+                auth_pass = secret;
             }
         };
         // now that we have our params and auth sorted, we can send the request
